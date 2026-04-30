@@ -4,14 +4,16 @@ class JwtServiceTest < ActiveSupport::TestCase
   test "should encode payload into JWT" do
     payload = { user_id: 1 }
     token = JwtService.encode(payload)
+
     assert_kind_of String, token
-    assert token.present?
+    assert_predicate token, :present?
   end
 
   test "should decode valid token" do
     payload = { "user_id" => 1 }
     token = JwtService.encode(payload)
     decoded = JwtService.decode(token)
+
     assert_equal payload["user_id"], decoded[:user_id]
   end
 
@@ -22,6 +24,7 @@ class JwtServiceTest < ActiveSupport::TestCase
   test "should return nil for expired token" do
     payload = { user_id: 1 }
     token = JwtService.encode(payload, 1.minute.ago)
+
     assert_nil JwtService.decode(token)
   end
 end
