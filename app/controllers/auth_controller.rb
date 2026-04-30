@@ -4,7 +4,7 @@ class AuthController < ApplicationController
   def register
     user = User.new(user_params)
     if user.save
-      render json: { message: 'User created successfully' }, status: :created
+      render json: { message: "User created successfully" }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -16,7 +16,7 @@ class AuthController < ApplicationController
       token = JwtService.encode(user_id: user.id)
       render json: { token: token }, status: :ok
     else
-      render json: { error: 'Invalid email or password' }, status: :unauthorized
+      render json: { error: "Invalid email or password" }, status: :unauthorized
     end
   end
 
