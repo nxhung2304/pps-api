@@ -1,8 +1,13 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
+  test "fixtures should be valid" do
+    assert users(:one).valid?
+    assert users(:two).valid?
+  end
+
   test "should be valid with valid attributes" do
-    user = User.new(email: "test@example.com", password: "password", password_confirmation: "password")
+    user = User.new(email: "unique@example.com", password: "password")
     assert user.valid?
   end
 
@@ -13,8 +18,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should be invalid with duplicate email" do
-    User.create!(email: "duplicate@example.com", password: "password")
-    user = User.new(email: "duplicate@example.com", password: "password")
+    user = User.new(email: users(:one).email, password: "password")
     assert_not user.valid?
     assert_includes user.errors[:email], "has already been taken"
   end
@@ -26,9 +30,9 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should have secure password" do
-    user = User.new(email: "test@example.com", password: "password")
+    user = users(:one)
     assert user.respond_to?(:authenticate)
-    assert user.authenticate("password")
+    assert user.authenticate("secret")
     assert_not user.authenticate("wrongpassword")
   end
 end
