@@ -7,7 +7,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should be valid with valid attributes" do
-    user = User.new(email: "unique@example.com", password: "password")
+    user = User.new(email: "unique@example.com", password: "password", password_confirmation: "password")
 
     assert_predicate user, :valid?
   end
@@ -37,7 +37,7 @@ class UserTest < ActiveSupport::TestCase
     user = users(:one)
 
     assert_respond_to user, :authenticate
-    assert user.authenticate("secret")
+    assert user.authenticate("password")
     assert_not user.authenticate("wrongpassword")
   end
 end
