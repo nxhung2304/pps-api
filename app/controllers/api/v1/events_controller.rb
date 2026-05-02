@@ -17,11 +17,11 @@ class Api::V1::EventsController < ApplicationController
     }.to_json
 
     Karafka.producer.produce_async(
-      topic: 'user.events',
+      topic: "user.events",
       payload: payload
     )
 
-    render json: { status: 'queued' }, status: :accepted
+    render json: { status: "queued" }, status: :accepted
   end
 
   private
