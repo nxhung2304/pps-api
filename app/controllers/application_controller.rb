@@ -1,16 +1,21 @@
 class ApplicationController < ActionController::API
   before_action :authenticate_user!
+  attr_reader :current_user
 
   private
 
   def authenticate_user!
     token = request.headers["Authorization"]&.split(" ")&.last
 
-    unauthorized! unless token
+    return unauthorized! unless token
 
-    user_data = JwtService.decode(token) rescue nil
+    user_data = begin
+                  JwtService.decode(token)
+                rescue StandardError
+                  nil
+                end
 
-    unauthorized! unless user_data
+    return unauthorized! unless user_data && user_data[:user_id]
 
     @current_user = User.find_by(id: user_data[:user_id])
 
