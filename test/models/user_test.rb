@@ -40,4 +40,20 @@ class UserTest < ActiveSupport::TestCase
     assert user.authenticate("password")
     assert_not user.authenticate("wrongpassword")
   end
+
+  test "should have many events" do
+    user = users(:one)
+    event = user.events.create!(type: "auth_event", timestamp: Time.now.to_i, payload: {})
+
+    assert_includes user.events, event
+  end
+
+  test "should destroy associated events when user is destroyed" do
+    user = users(:one)
+    user.events.create!(type: "auth_event", timestamp: Time.now.to_i, payload: {})
+
+    assert_difference "Event.count", -1 do
+      user.destroy
+    end
+  end
 end
