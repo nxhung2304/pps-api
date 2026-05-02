@@ -3,7 +3,7 @@
     - Always run `rails test` bef
 
 2. Write Code Ruby/Rails code following these rules:
-    - Use early return instead of nested if
+    - Use early return
     - Do not combine assignment inside conditions
     - Extract duplicated logic into small private methods
     - Handle exceptions explicitly (no silent crash)
