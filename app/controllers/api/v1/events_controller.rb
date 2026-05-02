@@ -1,12 +1,27 @@
 class Api::V1::EventsController < ApplicationController
-  def create
-    event = current_user.events.build(event_params)
+  before_action :authenticate_user!
 
-    if event.save
-      render json: event, status: :created
-    else
-      render json: { errors: event.errors.full_messages }, status: :unprocessable_entity
+  def create
+    # Validate payload
+    if event_params[:type].blank?
+      render json: { error: "Type is required" }, status: :unprocessable_entity
+      return
     end
+
+    payload = {
+      event_id: SecureRandom.uuid,
+      user_id: current_user.id,
+      type: event_params[:type],
+      timestamp: event_params[:timestamp] || Time.current.to_i,
+      data: event_params[:payload]
+    }.to_json
+
+    Karafka.producer.produce_async(
+      topic: 'user.events',
+      payload: payload
+    )
+
+    render json: { status: 'queued' }, status: :accepted
   end
 
   private

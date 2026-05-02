@@ -17,6 +17,22 @@ services:
       - db
       - kafka
     environment:
+      RAILS_ENV: development
+      BUNDLE_DEPLOYMENT: "0"
+      DATABASE_URL: postgres://postgres:12345678@db:5432/pps_api_development
+      KAFKA_BROKERS: kafka:9092
+
+  karafka:
+    build: .
+    command: bundle exec karafka server
+    volumes:
+      - .:/rails
+    depends_on:
+      - db
+      - kafka
+    environment:
+      RAILS_ENV: development
+      BUNDLE_DEPLOYMENT: "0"
       DATABASE_URL: postgres://postgres:12345678@db:5432/pps_api_development
       KAFKA_BROKERS: kafka:9092
   zookeeper:
