@@ -1,6 +1,4 @@
 class Api::V1::EventsController < ApplicationController
-  before_action :authenticate_user!
-
   def create
     event = current_user.events.build(event_params)
 

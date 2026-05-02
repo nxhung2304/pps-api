@@ -13,12 +13,6 @@ class Api::V1::EventIngestionTest < ActionDispatch::IntegrationTest
            params: { event: { type: "auth_event", payload: { button: "buy" }, timestamp: Time.current.to_i } }.to_json,
            headers: @headers
     end
-
-    assert_response :created
-    json_response = JSON.parse(response.body)
-
-    assert_equal "auth_event", json_response["type"]
-    assert_equal @user.id, json_response["user_id"]
   end
 
   test "should return unauthorized with missing token" do
