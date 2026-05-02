@@ -3,7 +3,12 @@ class Event < ApplicationRecord
 
   belongs_to :user
 
-  validates :type, presence: true, inclusion: { in: %w[auth_event activity_event] }
+  enum :type, {
+    auth_event: "auth_event",
+    activity_event: "activity_event"
+  }
+
+  validates :type, presence: true
   validates :timestamp, presence: true
   validate :timestamp_not_in_future
 

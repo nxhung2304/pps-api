@@ -18,9 +18,9 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "should be invalid with invalid type" do
-    event = Event.new(user: @user, type: "invalid_type", timestamp: Time.now.to_i)
-
-    assert_not event.valid?
+    assert_raises(ArgumentError) do
+      Event.new(user: @user, type: "invalid_type", timestamp: Time.now.to_i)
+    end
   end
 
   test "should be invalid with future timestamp" do
