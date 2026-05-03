@@ -3,11 +3,15 @@ services:
     image: postgres:16
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_PASSWORD: 12345678
 
   web:
     build: .
+    stdin_open: true
+    tty: true
     command: bin/rails server -b 0.0.0.0
     volumes:
       - .:/rails
