@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  date: 2026-05-03
+  total_coding_time: 1
+  total_gym_time: 1
+  total_run_distance: 1.5
+  sleep_duration: 1.5
+  event_count: 1
+
+two:
+  user: two
+  date: 2026-05-03
+  total_coding_time: 1
+  total_gym_time: 1
+  total_run_distance: 1.5
+  sleep_duration: 1.5
+  event_count: 1

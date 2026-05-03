@@ -2,31 +2,28 @@ class Api::V1::EventsController < ApplicationController
   before_action :authenticate_user!
 
   def create
-    # Validate payload
-    if event_params[:type].blank?
-      render json: { error: "Type is required" }, status: :unprocessable_entity
-      return
+    event_request = Forms::EventRequest.new(event_params)
+
+    unless event_request.valid?
+      return render json: { errors: event_request.errors.full_messages }, status: :unprocessable_entity
     end
 
-    payload = {
-      event_id: SecureRandom.uuid,
-      user_id: current_user.id,
-      type: event_params[:type],
-      timestamp: event_params[:timestamp] || Time.current.to_i,
-      data: event_params[:payload]
-    }.to_json
-
-    Karafka.producer.produce_async(
-      topic: "user.events",
-      payload: payload
+    Rails.logger.info(
+      "[Events#create] user_id=#{current_user.id} type=#{event_request.type}"
     )
 
-    render json: { status: "queued" }, status: :accepted
+    result = EventProducerService.new(current_user, event_request).call
+
+    if result.success?
+      render json: { status: "queued" }, status: :accepted
+    else
+      render json: { errors: result.error }, status: :bad_gateway
+    end
   end
 
   private
 
-  def event_params
-    params.require(:event).permit(:type, :timestamp, payload: {})
-  end
+    def event_params
+      params.require(:event).permit(:type, :timestamp, payload: {})
+    end
 end
